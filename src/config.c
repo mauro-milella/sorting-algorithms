@@ -72,7 +72,7 @@ void _parse_algorithms(
 int64_t _get_int(toml_result_t result, const char *field) {
     toml_datum_t repetitions_datum = toml_seek(result.toptab, field);
     if (repetitions_datum.type != TOML_INT64) {
-        fprintf(stderr, "Error: missing or invalid 'repetitions' in config\n");
+        fprintf(stderr, "Error: missing or invalid %s in config\n", field);
     }
     return repetitions_datum.u.int64;
 }
@@ -94,15 +94,15 @@ int config_load(char *config_filename, struct configuration *config) {
 
     _parse_name(result, config, "general.name", NAME_BUF);
 
-    _parse_algorithms(result, config, "algorithms", NAME_BUF);
+    _parse_algorithms(result, config, "algorithms.enabled", NAME_BUF);
 
-    config->repetitions = (uint32_t)_get_int(result, "repetitions");
+    config->repetitions = (uint32_t)_get_int(result, "general.repetitions");
 
-    config->min_size = (uint64_t)_get_int(result, "min_size");
+    config->min_size = (uint64_t)_get_int(result, "general.min_size");
 
-    config->max_size = (uint64_t)_get_int(result, "max_size");
+    config->max_size = (uint64_t)_get_int(result, "general.max_size");
 
-    config->seed = (uint64_t)_get_int(result, "seed");
+    config->seed = (uint64_t)_get_int(result, "general.seed");
 
     toml_free(result);
 
