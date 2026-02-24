@@ -20,4 +20,8 @@ struct configuration {
     uint64_t seed;
 };
 
+void config_init(struct configuration *config);
+
+int config_load(char *config_filename, struct configuration *config);
+
 #endif 
