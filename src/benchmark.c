@@ -23,16 +23,15 @@ int main(int argc, char *argv[])
             return EXIT_FAILURE;
         }
 
-        // Remove trailing newline if present
+        // remove trailing newline
         conf_path[strcspn(conf_path, "\n")] = '\0';
     }
 
-    // Example: Try opening the file
-    FILE *file = fopen(conf_path, "r");
-    if (!file) {
-        perror("Error opening file");
-        return EXIT_FAILURE;
-    }
+    struct configuration configuration;
+    config_init(&configuration); 
+    config_load(conf_path, &configuration);
+
+    printf("%ld %ld\n", configuration.min_size, configuration.max_size);
 
     return EXIT_SUCCESS;
 }
