@@ -67,11 +67,9 @@ void _parse_algorithms(
     }
 }
 
-int64_t _get_int(
-    toml_result_t result, 
-    struct configuration *config,
-    const char *field
-) {
+/* Parse the `field` of `result` as a signed long long integer, and return it.
+ */
+int64_t _get_int(toml_result_t result, const char *field) {
     toml_datum_t repetitions_datum = toml_seek(result.toptab, field);
     if (repetitions_datum.type != TOML_INT64) {
         fprintf(stderr, "Error: missing or invalid 'repetitions' in config\n");
@@ -80,7 +78,9 @@ int64_t _get_int(
 }
 
 
-// See https://github.com/cktan/tomlc17  
+/* Parse the provided TOML configuration file.
+ * Return code 0 if everything went ok.
+ */
 int config_load(char *config_filename, struct configuration *config) {
     FILE *config_file = fopen(config_filename, "r");
     if (config_file == NULL) {
@@ -96,18 +96,20 @@ int config_load(char *config_filename, struct configuration *config) {
 
     _parse_algorithms(result, config, "algorithms", NAME_BUF);
 
-    config->repetitions = (uint32_t)_get_int(result, config, "repetitions");
+    config->repetitions = (uint32_t)_get_int(result, "repetitions");
 
-    config->min_size = (uint64_t)_get_int(result, config, "min_size");
+    config->min_size = (uint64_t)_get_int(result, "min_size");
 
-    config->max_size = (uint64_t)_get_int(result, config, "max_size");
+    config->max_size = (uint64_t)_get_int(result, "max_size");
 
-    config->seed = (uint64_t)_get_int(result, config, "seed");
+    config->seed = (uint64_t)_get_int(result, "seed");
 
     toml_free(result);
 
     if (fclose(config_file) != 0) {
         perror("Error while closing the configuration file");
     }
+
+    return 0;
 }
 
