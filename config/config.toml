@@ -1,0 +1,9 @@
+[general]
+name = "this is a dummy configuration"
+min_size = 10
+max_size = 100
+repetitions = 20
+seed = 1605
+
+[algorithms]
+enabled = ["stupid_sort"]
