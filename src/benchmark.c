@@ -61,7 +61,7 @@ void benchmark(
 
             mutable_seed++;
 
-            printf("Elapsed time: %g", elapsed_time);
+            printf("Elapsed time: %g\n", elapsed_time);
         }
     }
 }
