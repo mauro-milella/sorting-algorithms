@@ -7,4 +7,4 @@ repetitions = 20
 seed = 1605
 
 [algorithms]
-enabled = ["stupid_sort"]
+enabled = ["INSERTION"]
