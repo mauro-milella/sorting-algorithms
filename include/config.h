@@ -12,6 +12,8 @@ struct configuration {
     char algorithms[ALGO_BUF][NAME_BUF];
     uint8_t algorithm_count;
 
+    uint8_t step;
+
     uint32_t repetitions;
 
     uint64_t min_size;
