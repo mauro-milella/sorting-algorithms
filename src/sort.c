@@ -6,10 +6,6 @@
 
 
 void insertion_sort(struct benchmark_input *binput) {
-
-    printf("INSIDE");
-    fflush(stdout);
-
     int64_t *data = (int64_t *)binput->data;
     uint32_t size = binput->size;
 
