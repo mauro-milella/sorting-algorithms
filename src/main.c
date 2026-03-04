@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "config.h"
+#include "benchmark.h"
+#include "sort.h"
 
 #define CONF_PATH_BUF 128
 
@@ -11,7 +12,7 @@ int main(int argc, char *argv[])
 {
     char conf_path[CONF_PATH_BUF];
 
-    // the path of the configuration must be specified in the command line
+    // The configuration must be specified in the command line
     if (argc == 2) {
         snprintf(conf_path, sizeof(conf_path), "%s", argv[1]);
     }
@@ -23,6 +24,13 @@ int main(int argc, char *argv[])
     struct configuration configuration;
     config_init(&configuration); 
     config_load(conf_path, &configuration);
+
+    benchmark(
+        &configuration,
+        generate_array,
+        select_sorting_algorithm,
+        test_sort
+    );
 
     return EXIT_SUCCESS;
 }
