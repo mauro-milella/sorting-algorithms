@@ -24,8 +24,6 @@ int main(int argc, char *argv[])
     config_init(&configuration); 
     config_load(conf_path, &configuration);
 
-    printf("%ld %ld\n", configuration.min_size, configuration.max_size);
-
     return EXIT_SUCCESS;
 }
 
