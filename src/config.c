@@ -96,6 +96,8 @@ int config_load(char *config_filename, struct configuration *config) {
 
     _parse_algorithms(result, config, "algorithms.enabled", NAME_BUF);
 
+    config->step = (uint8_t)_get_int(result, "general.step");
+
     config->repetitions = (uint32_t)_get_int(result, "general.repetitions");
 
     config->min_size = (uint64_t)_get_int(result, "general.min_size");
