@@ -1,8 +1,0 @@
-At the moment, compile with 
-
-gcc -Wall -Wextra -Iinclude src/*.c
-
-to manually include the header files.
-
-TODO: write a Makefile
-TODO: write the experiments driver
