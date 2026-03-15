@@ -72,37 +72,14 @@ void benchmark(
         }
     }
 
-    plot(config, results);
+    uint32_t code = plot(config, results);
+    if (code == 0) {
+        fprintf(stderr, "Plotting error"); 
+    }
 
-    for (uint8_t a = 0; a < config->algorithm_count; a++) free(results[a]);
+    for (uint8_t a = 0; a < config->algorithm_count; a++) {
+        free(results[a]);
+    }
     free(results);
 }
 
-// void benchmark(
-//     struct configuration *config, 
-//     input_generator_ptr input_generator,
-//     algorithm_selector_ptr algorithm_selector,
-//     test_ptr test_strategy
-// ) {
-//     uint32_t initial_seed = config->seed;
-//
-//     for (uint8_t algo_idx=0; algo_idx<config->algorithm_count; algo_idx++) {
-//         uint32_t mutable_seed = initial_seed;
-//
-//         for (uint64_t i=config->min_size; i<=config->max_size; i+=config->step) {
-//             srand(mutable_seed);
-//
-//             double elapsed_time = run(
-//                 i,
-//                 config->repetitions, 
-//                 input_generator,
-//                 algorithm_selector(config->algorithms[algo_idx]),
-//                 test_strategy
-//             );
-//
-//             mutable_seed++;
-//
-//             printf("Elapsed time: %g\n", elapsed_time);
-//         }
-//     }
-// }
