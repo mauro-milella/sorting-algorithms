@@ -2,8 +2,16 @@
 
 #include "plot.h"
 
+#ifdef _WIN32
+#define POPEN _popen
+#define PCLOSE _pclose
+#else
+#define POPEN popen
+#define PCLOSE pclose
+#endif
+
 int32_t plot(struct configuration *config, double **results) {
-    FILE *gp = popen("gnuplot -persistent", "w");
+    FILE *gp = POPEN("gnuplot -persistent", "w");
     if (!gp) {
         fprintf(stderr, "Error: Could not open pipe to Gnuplot.\n");
         return 0;
@@ -33,7 +41,7 @@ int32_t plot(struct configuration *config, double **results) {
         fprintf(gp, "e\n");
     }
 
-    pclose(gp);
+    PCLOSE(gp);
 
     return 1;
 }
