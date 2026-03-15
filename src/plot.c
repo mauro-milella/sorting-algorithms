@@ -2,6 +2,8 @@
 
 #include "plot.h"
 
+// popen should be renamed in windows
+// https://learn.microsoft.com/it-it/search/?terms=popen
 #ifdef _WIN32
 #define POPEN _popen
 #define PCLOSE _pclose
