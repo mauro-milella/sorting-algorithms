@@ -17,7 +17,7 @@ void insertion_sort(struct benchmark_input *binput) {
         i = j-1;
         key = data[j];
 
-        while(data[i] > key) {
+        while(i >= 0 && data[i] > key) {
             data[i+1] = data[i];
             i--;
         }
