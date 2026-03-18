@@ -3,6 +3,6 @@
 
 #include "config.h"
 
-int32_t plot(struct configuration *config, double **results);
+int32_t plot(struct configuration* config, double** results);
 
 #endif

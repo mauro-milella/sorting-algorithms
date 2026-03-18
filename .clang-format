@@ -1,28 +1,25 @@
 BasedOnStyle: LLVM
 
-# --- Indentation ---
+# --- Tabs ---
 UseTab: Always
-IndentWidth: 4 
+IndentWidth: 4
 TabWidth: 4
 
-# --- Braces & layout ---
-BreakBeforeBraces: Allman
-AllowShortIfStatementsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: None
+# --- Compact braces (K&R style) ---
+BreakBeforeBraces: Attach
 
-# --- Line length ---
-ColumnLimit: 100
+# --- Keep things tight ---
+AllowShortIfStatementsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Inline
+
+# --- Line width ---
+ColumnLimit: 80
 
 # --- Spacing ---
 SpaceBeforeParens: ControlStatements
-SpacesInParentheses: false
+
+# --- Pointers like classic C ---
+PointerAlignment: Left
 
 # --- Includes ---
 SortIncludes: true
-
-# --- Alignment ---
-AlignOperands: true
-AlignTrailingComments: true
-
-# --- Misc ---
-PointerAlignment: Left
