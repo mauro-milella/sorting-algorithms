@@ -2,7 +2,7 @@ BasedOnStyle: LLVM
 
 # --- Indentation ---
 UseTab: Always
-IndentWidth: 4        # visual width of a tab
+IndentWidth: 4 
 TabWidth: 4
 
 # --- Braces & layout ---
