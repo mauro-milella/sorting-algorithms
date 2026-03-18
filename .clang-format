@@ -1,0 +1,28 @@
+BasedOnStyle: LLVM
+
+# --- Indentation ---
+UseTab: Always
+IndentWidth: 4        # visual width of a tab
+TabWidth: 4
+
+# --- Braces & layout ---
+BreakBeforeBraces: Allman
+AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+
+# --- Line length ---
+ColumnLimit: 100
+
+# --- Spacing ---
+SpaceBeforeParens: ControlStatements
+SpacesInParentheses: false
+
+# --- Includes ---
+SortIncludes: true
+
+# --- Alignment ---
+AlignOperands: true
+AlignTrailingComments: true
+
+# --- Misc ---
+PointerAlignment: Left
