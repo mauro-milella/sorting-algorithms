@@ -7,7 +7,7 @@
 
 #define CONF_PATH_BUF 128
 
-int main(int argc, char* argv[]) {
+int main(int argc, char** argv) {
 	char conf_path[CONF_PATH_BUF];
 
 	// The configuration must be specified in the command line
