@@ -1,10 +1,10 @@
 [general]
 name = "sorting_algorithms"
-step = 5
+step = 10
 min_size = 10 
 max_size = 1000
 repetitions = 50
 seed = 1605
 
 [algorithms]
-enabled = ["INSERTION", "MERGE"]
+enabled = ["INSERTION", "TAILQUICK"]
