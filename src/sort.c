@@ -131,19 +131,22 @@ void quick_sort(struct benchmark_input* binput) {
 	_quick_sort(data, 0, size - 1);
 }
 
-// TODO: only retrieve values one time
 uint32_t median_of_three(int64_t* data, uint32_t a, uint32_t b, uint32_t c) {
-	if (data[a] > data[b]) {
-		if (data[b] > data[c])
+    int64_t data_a = data[a];
+    int64_t data_b = data[b];
+    int64_t data_c = data[c];
+
+	if (data_a > data_b) {
+		if (data_b > data_c)
 			return b;
-		else if (data[a] < data[c])
+		else if (data_a < data_c)
 			return a;
 		else
 			return c;
 	} else {
-		if (data[a] > data[c])
+		if (data_a > data_c)
 			return a;
-		else if (data[b] < data[c])
+		else if (data_b < data_c)
 			return b;
 		else
 			return c;
