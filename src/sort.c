@@ -132,9 +132,9 @@ void quick_sort(struct benchmark_input* binput) {
 }
 
 uint32_t median_of_three(int64_t* data, uint32_t a, uint32_t b, uint32_t c) {
-    int64_t data_a = data[a];
-    int64_t data_b = data[b];
-    int64_t data_c = data[c];
+	int64_t data_a = data[a];
+	int64_t data_b = data[b];
+	int64_t data_c = data[c];
 
 	if (data_a > data_b) {
 		if (data_b > data_c)
@@ -177,6 +177,23 @@ void mot_quick_sort(struct benchmark_input* binput) {
 	_mot_quick_sort(data, 0, size - 1);
 }
 
+void _tail_quick_sort(int64_t* data, uint32_t start, uint32_t end) {
+	while (start < end) {
+		int mid = mot_partition(data, start, end);
+		if (mid > 0) {
+			_tail_quick_sort(data, start, mid - 1);
+		}
+		start = mid + 1;
+	}
+}
+
+void tail_quick_sort(struct benchmark_input* binput) {
+	int64_t* data = (int64_t*)binput->data;
+	uint32_t size = binput->size;
+
+	_tail_quick_sort(data, 0, size - 1);
+}
+
 void generate_array(struct benchmark_input* binput, uint32_t size) {
 	binput->size = size;
 	binput->data = malloc(size * sizeof(int64_t));
@@ -199,6 +216,8 @@ algorithm_ptr select_sorting_algorithm(char* algo_name) {
 		return &quick_sort;
 	} else if (strcmp(algo_name, "MOTQUICK") == 0) {
 		return &mot_quick_sort;
+	} else if (strcmp(algo_name, "TAILQUICK") == 0) {
+		return &tail_quick_sort;
 	} else {
 		printf("The provided algorithm (%s) is not available.", algo_name);
 		exit(-1);
