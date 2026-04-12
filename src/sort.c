@@ -5,6 +5,7 @@
 #include "benchmark.h"
 
 #define HYBRID_MS_K 210
+#define HYBRID_QS_K 300
 
 void _insertion_sort(int64_t* data, uint32_t start, uint32_t end) {
 	int32_t i;
@@ -194,6 +195,40 @@ void tail_quick_sort(struct benchmark_input* binput) {
 	_tail_quick_sort(data, 0, size - 1);
 }
 
+void _hybrid_tail_quick_sort(int64_t* data, uint32_t start, uint32_t end) {
+    while (start < end) {
+        uint32_t size = end - start + 1;
+
+        if (size <= HYBRID_QS_K) {
+            _insertion_sort(data, start, end);
+            return;
+        }
+
+        uint32_t mid = mot_partition(data, start, end);
+
+        if (mid - start > end - mid) {
+            if (mid > 0) {
+                _tail_quick_sort(data, start, mid - 1);
+            }
+            start = mid + 1;
+        } else {
+            _tail_quick_sort(data, mid + 1, end);
+
+            if (mid == 0) {
+                break; 
+            }
+            end = mid - 1;
+        }
+    }
+}
+
+void hybrid_tail_quick_sort(struct benchmark_input* binput) {
+	int64_t* data = (int64_t*)binput->data;
+	uint32_t size = binput->size;
+
+	_hybrid_tail_quick_sort(data, 0, size - 1);
+}
+
 void generate_array(struct benchmark_input* binput, uint32_t size) {
 	binput->size = size;
 	binput->data = malloc(size * sizeof(int64_t));
@@ -218,6 +253,8 @@ algorithm_ptr select_sorting_algorithm(char* algo_name) {
 		return &mot_quick_sort;
 	} else if (strcmp(algo_name, "TAILQUICK") == 0) {
 		return &tail_quick_sort;
+	} else if (strcmp(algo_name, "HTAILQUICK") == 0) {
+		return &hybrid_tail_quick_sort;
 	} else {
 		printf("The provided algorithm (%s) is not available.", algo_name);
 		exit(-1);
