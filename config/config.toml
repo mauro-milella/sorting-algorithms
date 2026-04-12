@@ -7,4 +7,4 @@ repetitions = 50
 seed = 1605
 
 [algorithms]
-enabled = ["INSERTION", "TAILQUICK"]
+enabled = ["INSERTION", "TAILQUICK", "HTAILQUICK"]
