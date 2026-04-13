@@ -345,10 +345,14 @@ void _tim_sort(int64_t* data, uint32_t start, uint32_t end) {
 	}
 }
 
-/* This could be further optimized by: 
+/* TODO: this could be further optimized by: 
  * - leveraging only one buffer for all the merge calls;
  * - implementing galloping merge;
- * - computing the "minrun" parameter as suggested from wikipedia. */
+ * - computing the "minrun" parameter as suggested from wikipedia. 
+ *
+ * TODO: this algorithm should be particularly fast when data already has 
+ * a certain structure, with "natural runs" (small contiguous sorted chunks);
+ * it is not that hard to change the generator for testing this scenario.*/
 void tim_sort(struct benchmark_input* binput) {
 	int64_t* data = (int64_t*)binput->data;
 	uint32_t size = (uint32_t)binput->size;
