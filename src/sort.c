@@ -17,6 +17,7 @@
  * size of the array divided by that number is close to a power of two.
  */
 #define TS_K 32
+#define TS_MAX_RUN_SIZE 1024
 
 void _insertion_sort(int64_t* data, uint32_t start, uint32_t end) {
 	int32_t i;
@@ -294,7 +295,7 @@ struct ts_pair find_run(int64_t* data, uint32_t start, uint32_t size) {
 void _tim_sort(int64_t* data, uint32_t start, uint32_t end) {
 	uint32_t pos = start;
 	uint32_t run_index = 0;
-	struct ts_pair runs[1024]; // TODO: this size should be definitely bigger
+	struct ts_pair runs[TS_MAX_RUN_SIZE]; 
 
 	while (pos <= end) {
 		runs[run_index] = find_run(data, pos, end);
@@ -344,6 +345,10 @@ void _tim_sort(int64_t* data, uint32_t start, uint32_t end) {
 	}
 }
 
+/* This could be further optimized by: 
+ * - leveraging only one buffer for all the merge calls;
+ * - implementing galloping merge;
+ * - computing the "minrun" parameter as suggested from wikipedia. */
 void tim_sort(struct benchmark_input* binput) {
 	int64_t* data = (int64_t*)binput->data;
 	uint32_t size = (uint32_t)binput->size;
