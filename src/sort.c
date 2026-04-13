@@ -5,7 +5,18 @@
 #include "benchmark.h"
 
 #define HYBRID_MS_K 210
+
 #define HYBRID_QS_K 300
+
+/* Minimum run size for Timsort;
+ *
+ * see the minimum chunk size explanation for timsort:
+ * https://en.wikipedia.org/wiki/Timsort
+ *
+ * TLDR: the chunk size should be a number between 32 and 64, such that the
+ * size of the array divided by that number is close to a power of two.
+ */
+#define TS_K 32
 
 void _insertion_sort(int64_t* data, uint32_t start, uint32_t end) {
 	int32_t i;
@@ -196,30 +207,30 @@ void tail_quick_sort(struct benchmark_input* binput) {
 }
 
 void _hybrid_tail_quick_sort(int64_t* data, uint32_t start, uint32_t end) {
-    while (start < end) {
-        uint32_t size = end - start + 1;
+	while (start < end) {
+		uint32_t size = end - start + 1;
 
-        if (size <= HYBRID_QS_K) {
-            _insertion_sort(data, start, end);
-            return;
-        }
+		if (size <= HYBRID_QS_K) {
+			_insertion_sort(data, start, end);
+			return;
+		}
 
-        uint32_t mid = mot_partition(data, start, end);
+		uint32_t mid = mot_partition(data, start, end);
 
-        if (mid - start > end - mid) {
-            if (mid > 0) {
-                _tail_quick_sort(data, start, mid - 1);
-            }
-            start = mid + 1;
-        } else {
-            _tail_quick_sort(data, mid + 1, end);
+		if (mid - start > end - mid) {
+			if (mid > 0) {
+				_tail_quick_sort(data, start, mid - 1);
+			}
+			start = mid + 1;
+		} else {
+			_tail_quick_sort(data, mid + 1, end);
 
-            if (mid == 0) {
-                break; 
-            }
-            end = mid - 1;
-        }
-    }
+			if (mid == 0) {
+				break;
+			}
+			end = mid - 1;
+		}
+	}
 }
 
 void hybrid_tail_quick_sort(struct benchmark_input* binput) {
@@ -227,6 +238,117 @@ void hybrid_tail_quick_sort(struct benchmark_input* binput) {
 	uint32_t size = binput->size;
 
 	_hybrid_tail_quick_sort(data, 0, size - 1);
+}
+
+/* Essentially a pair storing the initial and final index in a collection;
+ * this is implemented for supporting tim sort. */
+struct ts_pair {
+	uint32_t start;
+	uint32_t end;
+};
+
+void reverse(int64_t* data, uint32_t start, uint32_t end) {
+	while (start < end) {
+		swap(data, start, end);
+		start++;
+		end--;
+	}
+}
+
+/* Find and return a new run in `data`, starting from `start`, up until `size`;
+ * In particular, <= size is considered rather than < size.*/
+struct ts_pair find_run(int64_t* data, uint32_t start, uint32_t size) {
+	if (start >= size) {
+		return (struct ts_pair){start, start};
+	}
+
+	uint32_t idx = start;
+
+	// ascending order
+	if (data[start + 1] >= data[start]) {
+		while (idx < size && data[idx + 1] >= data[idx]) {
+			++idx;
+		}
+	}
+	// descending
+	else {
+		while (idx < size && data[idx + 1] <= data[idx]) {
+			++idx;
+		}
+		reverse(data, start, idx);
+	}
+
+	// run size is not big enough
+	if (idx - start + 1 < TS_K) {
+		uint32_t target = start + TS_K - 1;
+		if (target > size) {
+			target = size;
+		}
+		_insertion_sort(data, start, target);
+		return (struct ts_pair){start, target};
+	} else {
+		return (struct ts_pair){start, idx};
+	}
+}
+
+void _tim_sort(int64_t* data, uint32_t start, uint32_t end) {
+	uint32_t pos = start;
+	uint32_t run_index = 0;
+	struct ts_pair runs[1024]; // TODO: this size should be definitely bigger
+
+	while (pos <= end) {
+		runs[run_index] = find_run(data, pos, end);
+		pos = runs[run_index].end + 1;
+		run_index += 1;
+
+		// invariance-check loop
+		while (run_index >= 3) {
+			uint32_t X_len =
+				runs[run_index - 1].end - runs[run_index - 1].start + 1;
+			uint32_t Y_len =
+				runs[run_index - 2].end - runs[run_index - 2].start + 1;
+			uint32_t Z_len =
+				runs[run_index - 3].end - runs[run_index - 3].start + 1;
+
+			// negation of (|Z| > |Y| + |X|) && (|Y| > |X|)
+			if ((Z_len <= Y_len + X_len) || (Y_len <= X_len)) {
+				struct ts_pair Y = runs[run_index - 2];
+
+				if (Z_len < X_len) {
+					// merge Y and Z
+					struct ts_pair Z = runs[run_index - 3];
+					merge(data, Z.start, Z.end, Y.end);
+					runs[run_index - 3].end = runs[run_index - 2].end;
+					runs[run_index - 2] = runs[run_index];
+					run_index--;
+				} else {
+					// merge Y and X
+					struct ts_pair X = runs[run_index - 1];
+					merge(data, Y.start, Y.end, X.end);
+					runs[run_index - 2].end = runs[run_index - 1].end;
+					run_index--;
+				}
+			} else {
+				// exit from the invariance-check loop
+				break;
+			}
+		}
+	}
+
+	// final merge (every Y with the subsequent X, until only Y remains)
+	while (run_index > 1) {
+		merge(data, runs[run_index - 2].start, runs[run_index-2].end,
+			  runs[run_index-1].end);
+		runs[run_index - 2].end = runs[run_index-1].end;
+		run_index--;
+	}
+}
+
+void tim_sort(struct benchmark_input* binput) {
+	int64_t* data = (int64_t*)binput->data;
+	uint32_t size = (uint32_t)binput->size;
+
+	_tim_sort(data, 0, size - 1);
 }
 
 void generate_array(struct benchmark_input* binput, uint32_t size) {
@@ -255,6 +377,8 @@ algorithm_ptr select_sorting_algorithm(char* algo_name) {
 		return &tail_quick_sort;
 	} else if (strcmp(algo_name, "HTAILQUICK") == 0) {
 		return &hybrid_tail_quick_sort;
+	} else if (strcmp(algo_name, "TIM") == 0) {
+		return &tim_sort;
 	} else {
 		printf("The provided algorithm (%s) is not available.", algo_name);
 		exit(-1);
