@@ -61,7 +61,7 @@ flowchart TB
     BENCH -->|fetch parameters| STRUCT
 
     BENCH -->|genera input| SORT
-    BENCH -->|execute algoritmo| SORT
+    BENCH -->|execute algorithm| SORT
     BENCH -->|test| SORT
 
     BENCH -->|plots| PLOT
