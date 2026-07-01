@@ -1,25 +1,13 @@
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 BasedOnStyle: LLVM
 
-# --- Tabs ---
 UseTab: Always
 IndentWidth: 4
 TabWidth: 4
+ColumnLimit: 80
+PointerAlignment: Left
+SortIncludes: true
 
-# --- Compact braces (K&R style) ---
+# K&R style: https://en.wikipedia.org/wiki/Indentation_style
 BreakBeforeBraces: Attach
 
-# --- Keep things tight ---
-AllowShortIfStatementsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: Inline
-
-# --- Line width ---
-ColumnLimit: 80
-
-# --- Spacing ---
-SpaceBeforeParens: ControlStatements
-
-# --- Pointers like classic C ---
-PointerAlignment: Left
-
-# --- Includes ---
-SortIncludes: true

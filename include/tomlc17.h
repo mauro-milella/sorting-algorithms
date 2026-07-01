@@ -26,17 +26,17 @@
 #endif
 
 enum toml_type_t {
-  TOML_UNKNOWN = 0,
-  TOML_STRING,
-  TOML_INT64,
-  TOML_FP64,
-  TOML_BOOLEAN,
-  TOML_DATE,
-  TOML_TIME,
-  TOML_DATETIME,
-  TOML_DATETIMETZ,
-  TOML_ARRAY,
-  TOML_TABLE,
+	TOML_UNKNOWN = 0,
+	TOML_STRING,
+	TOML_INT64,
+	TOML_FP64,
+	TOML_BOOLEAN,
+	TOML_DATE,
+	TOML_TIME,
+	TOML_DATETIME,
+	TOML_DATETIMETZ,
+	TOML_ARRAY,
+	TOML_TABLE,
 };
 typedef enum toml_type_t toml_type_t;
 
@@ -45,43 +45,43 @@ typedef enum toml_type_t toml_type_t;
  */
 typedef struct toml_datum_t toml_datum_t;
 struct toml_datum_t {
-  toml_type_t type;
-  uint32_t flag; // internal
-  union {
-    const char *s; // same as str.ptr; use if there are no NUL in string.
-    struct {
-      const char *ptr; // NUL terminated string
-      int len;         // length excluding the terminating NUL.
-    } str;
-    int64_t int64; // integer
-    double fp64;   // float
-    bool boolean;
-    struct { // date, time
-      int16_t year, month, day;
-      int16_t hour, minute, second;
-      int32_t usec;
-      int16_t tz; // in minutes
-    } ts;
-    struct {              // array
-      int32_t size;       // count elem
-      toml_datum_t *elem; // elem[]
-    } arr;
-    struct {               // table
-      int32_t size;        // count key
-      const char **key;    // key[]
-      int *len;            // len[]
-      toml_datum_t *value; // value[]
-    } tab;
-  } u;
+	toml_type_t type;
+	uint32_t flag; // internal
+	union {
+		const char* s; // same as str.ptr; use if there are no NUL in string.
+		struct {
+			const char* ptr; // NUL terminated string
+			int len;		 // length excluding the terminating NUL.
+		} str;
+		int64_t int64; // integer
+		double fp64;   // float
+		bool boolean;
+		struct { // date, time
+			int16_t year, month, day;
+			int16_t hour, minute, second;
+			int32_t usec;
+			int16_t tz; // in minutes
+		} ts;
+		struct {				// array
+			int32_t size;		// count elem
+			toml_datum_t* elem; // elem[]
+		} arr;
+		struct {				 // table
+			int32_t size;		 // count key
+			const char** key;	 // key[]
+			int* len;			 // len[]
+			toml_datum_t* value; // value[]
+		} tab;
+	} u;
 };
 
 /* Result returned by toml_parse() */
 typedef struct toml_result_t toml_result_t;
 struct toml_result_t {
-  bool ok;             // success flag
-  toml_datum_t toptab; // valid if ok
-  char errmsg[200];    // valid if not ok
-  void *__internal;    // do not use
+	bool ok;			 // success flag
+	toml_datum_t toptab; // valid if ok
+	char errmsg[200];	 // valid if not ok
+	void* __internal;	 // do not use
 };
 
 /**
@@ -91,7 +91,7 @@ struct toml_result_t {
  * IMPORTANT: src[] must be a NUL terminated string! The len parameter
  * does not include the NUL terminator.
  */
-TOML_EXTERN toml_result_t toml_parse(const char *src, int len);
+TOML_EXTERN toml_result_t toml_parse(const char* src, int len);
 
 /**
  * Parse a toml file. Returns a toml_result which must be freed
@@ -99,13 +99,13 @@ TOML_EXTERN toml_result_t toml_parse(const char *src, int len);
  *
  * IMPORTANT: you are still responsible to fclose(fp).
  */
-TOML_EXTERN toml_result_t toml_parse_file(FILE *fp);
+TOML_EXTERN toml_result_t toml_parse_file(FILE* fp);
 
 /**
  * Parse a toml file. Returns a toml_result which must be freed
  * using toml_free() eventually.
  */
-TOML_EXTERN toml_result_t toml_parse_file_ex(const char *fname);
+TOML_EXTERN toml_result_t toml_parse_file_ex(const char* fname);
 
 /**
  * Release the result.
@@ -116,7 +116,7 @@ TOML_EXTERN void toml_free(toml_result_t result);
  * Find a key in a toml_table. Return the value of the key if found,
  * or a TOML_UNKNOWN otherwise.
  */
-TOML_EXTERN toml_datum_t toml_get(toml_datum_t table, const char *key);
+TOML_EXTERN toml_datum_t toml_get(toml_datum_t table, const char* key);
 
 /**
  * Locate a value starting from a toml_table. Return the value of the key if
@@ -126,7 +126,7 @@ TOML_EXTERN toml_datum_t toml_get(toml_datum_t table, const char *key);
  * chars. The maximum length of the multipart_key must not exceed 127 bytes.
  */
 TOML_EXTERN toml_datum_t toml_seek(toml_datum_t table,
-                                   const char *multipart_key);
+								   const char* multipart_key);
 
 /**
  * OBSOLETE: use toml_get() instead.
@@ -134,8 +134,8 @@ TOML_EXTERN toml_datum_t toml_seek(toml_datum_t table,
  * or a TOML_UNKNOWN otherwise. (
  */
 static inline toml_datum_t toml_table_find(toml_datum_t table,
-                                           const char *key) {
-  return toml_get(table, key);
+										   const char* key) {
+	return toml_get(table, key);
 }
 
 /**
@@ -157,21 +157,21 @@ static inline toml_datum_t toml_table_find(toml_datum_t table,
  *     else:
  *         override
  */
-TOML_EXTERN toml_result_t toml_merge(const toml_result_t *r1,
-                                     const toml_result_t *r2);
+TOML_EXTERN toml_result_t toml_merge(const toml_result_t* r1,
+									 const toml_result_t* r2);
 
 /**
  *  Check if two results are the same. Dictinary and array orders are
  *  sensitive.
  */
-TOML_EXTERN bool toml_equiv(const toml_result_t *r1, const toml_result_t *r2);
+TOML_EXTERN bool toml_equiv(const toml_result_t* r1, const toml_result_t* r2);
 
 /* Options that override tomlc17 defaults globally */
 typedef struct toml_option_t toml_option_t;
 struct toml_option_t {
-  bool check_utf8; // Check all chars are valid utf8; default: false.
-  void *(*mem_realloc)(void *ptr, size_t size); // default: realloc()
-  void (*mem_free)(void *ptr);                  // default: free()
+	bool check_utf8; // Check all chars are valid utf8; default: false.
+	void* (*mem_realloc)(void* ptr, size_t size); // default: realloc()
+	void (*mem_free)(void* ptr);				  // default: free()
 };
 
 /**

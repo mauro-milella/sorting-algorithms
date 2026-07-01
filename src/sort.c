@@ -295,7 +295,7 @@ struct ts_pair find_run(int64_t* data, uint32_t start, uint32_t size) {
 void _tim_sort(int64_t* data, uint32_t start, uint32_t end) {
 	uint32_t pos = start;
 	uint32_t run_index = 0;
-	struct ts_pair runs[TS_MAX_RUN_SIZE]; 
+	struct ts_pair runs[TS_MAX_RUN_SIZE];
 
 	while (pos <= end) {
 		runs[run_index] = find_run(data, pos, end);
@@ -338,19 +338,19 @@ void _tim_sort(int64_t* data, uint32_t start, uint32_t end) {
 
 	// final merge (every Y with the subsequent X, until only Y remains)
 	while (run_index > 1) {
-		merge(data, runs[run_index - 2].start, runs[run_index-2].end,
-			  runs[run_index-1].end);
-		runs[run_index - 2].end = runs[run_index-1].end;
+		merge(data, runs[run_index - 2].start, runs[run_index - 2].end,
+			  runs[run_index - 1].end);
+		runs[run_index - 2].end = runs[run_index - 1].end;
 		run_index--;
 	}
 }
 
-/* TODO: this could be further optimized by: 
+/* TODO: this could be further optimized by:
  * - leveraging only one buffer for all the merge calls;
  * - implementing galloping merge;
- * - computing the "minrun" parameter as suggested from wikipedia. 
+ * - computing the "minrun" parameter as suggested from wikipedia.
  *
- * TODO: this algorithm should be particularly fast when data already has 
+ * TODO: this algorithm should be particularly fast when data already has
  * a certain structure, with "natural runs" (small contiguous sorted chunks);
  * it is not that hard to change the generator for testing this scenario.*/
 void tim_sort(struct benchmark_input* binput) {
