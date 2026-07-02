@@ -146,4 +146,3 @@ However, if available, `gnuplot` ([see here](http://webusers.fis.uniroma3.it/~me
 Big thanks to the contributors of [tomlc17](https://github.com/cktan/tomlc17/tree/main). It is an easy to understand and robust library for parsing toml files.
 
 A big thumb-up for [gnuplot](https://sourceforge.net/p/gnuplot/gnuplot-main/merge-requests/), too!
-
